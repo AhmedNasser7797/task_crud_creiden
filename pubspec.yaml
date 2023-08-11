@@ -1,0 +1,63 @@
+name: task_crud
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.5
+  # Framework
+  ffi: ^2.0.1
+  flutter_lints: ^2.0.1
+  # form validator
+  flrx_validator: ^0.6.0
+  # responsive
+  responsive_framework: ^0.2.0
+  # Api
+  dio: ^5.3.2
+  pretty_dio_logger: ^1.3.1
+  dartz: ^0.10.1
+  # Data
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  #datetime format
+  intl: ^0.17.0
+  # images
+  flutter_svg: ^2.0.0
+  fluttertoast: ^8.2.2
+  loading_indicator: ^3.1.1
+  provider: ^6.0.5
+  gradient_borders: ^1.0.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+
+  uses-material-design: true
+  fonts:
+    - family: lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/lato/Lato-Black.ttf
+          weight: 900
+    - family: baloo
+      fonts:
+        - asset: assets/fonts/baloo/Baloo-Regular.ttf
+          weight: 400
+
