@@ -34,8 +34,17 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: const Text("TODO"),
           backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              onPressed: () =>
+                  UtilsConstants().scaffoldKey.currentState?.openEndDrawer(),
+              icon: Image.asset(
+                "assets/images/menu.png",
+              ),
+            ),
+          ],
         ),
-        drawer: const CustomDrawer(),
+        endDrawer: const CustomDrawer(),
         body: ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           itemCount: 5,

@@ -31,7 +31,7 @@ class TODOCard extends StatelessWidget {
           16.pw,
           Expanded(
             child: Text(
-              "Shopping list, food for the week dsf sdgk safklg s...",
+              "Shopping list, food for the week ...",
               style: titleStyle(context),
               overflow: TextOverflow.ellipsis,
             ),

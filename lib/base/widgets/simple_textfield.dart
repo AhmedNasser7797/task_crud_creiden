@@ -24,11 +24,16 @@ class SimpleTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final bool? obSecure;
   final bool readOnly;
+  final bool withGradiant;
   final Widget? suffixIcon;
   final Widget? suffix;
   final Widget? prefix;
   final VoidCallback? onTap;
   final EdgeInsets? contentPadding;
+  final InputBorder? focusedBorder;
+  final InputBorder? border;
+  final Color? filledColor;
+  final bool filled;
 
   final double? width;
   final double suffixIconMaxHeight;
@@ -40,6 +45,7 @@ class SimpleTextField extends StatelessWidget {
     @required this.onSaved,
     this.onChanged,
     this.readOnly = false,
+    this.withGradiant = false,
     required this.hintText,
     this.textAlign,
     // this.textAlign = TextAlign.left,
@@ -62,6 +68,10 @@ class SimpleTextField extends StatelessWidget {
     this.suffixIconMaxHeight = 16,
     this.suffixIconMaxWidth = 77,
     this.styleFontSize = 12,
+    this.focusedBorder,
+    this.filledColor,
+    this.filled = false,
+    this.border,
   }) : super(key: key);
 
   @override
@@ -69,22 +79,18 @@ class SimpleTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-          visible: label != null && label!.isNotEmpty,
-          child: Text(
+        if (label != null && label!.isNotEmpty)
+          Text(
             label!,
             style: const TextStyle(
               fontSize: 16,
               color: Color(0xffc9c9c9),
             ),
           ),
-        ),
-        Visibility(
-          visible: label != null && label!.isNotEmpty,
-          child: const SizedBox(
+        if (label != null && label!.isNotEmpty)
+          const SizedBox(
             height: 16,
           ),
-        ),
         SizedBox(
             width: width ?? double.infinity,
             child: TextFormField(
@@ -115,17 +121,31 @@ class SimpleTextField extends StatelessWidget {
                   maxHeight: suffixIconMaxHeight,
                   minWidth: 12,
                 ),
+                focusedBorder: focusedBorder,
+                enabledBorder: focusedBorder,
+                border: border,
                 prefixIcon: prefix,
                 suffixIcon: suffixIcon,
                 suffix: suffix,
                 prefixIconConstraints: const BoxConstraints(maxWidth: 66),
                 hintText: hintText,
-                // labelText: label,
+                filled: filled,
+                fillColor: filledColor,
                 isDense: true,
                 counter: const SizedBox(),
                 // contentPadding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               ),
             )),
+        if (withGradiant)
+          Container(
+            height: 2,
+            width: width ?? double.infinity,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [
+              Color(0xff254DDE),
+              Color(0xffFE1E9A),
+            ])),
+          )
       ],
     );
   }

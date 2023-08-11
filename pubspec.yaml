@@ -35,14 +35,19 @@ dependencies:
   loading_indicator: ^3.1.1
   provider: ^6.0.5
   gradient_borders: ^1.0.0
+  flex_color_picker: ^3.3.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 flutter:
-
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+
   fonts:
     - family: lato
       fonts:

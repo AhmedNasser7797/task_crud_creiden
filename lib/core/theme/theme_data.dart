@@ -21,6 +21,9 @@ TextStyle? buttonStyle(BuildContext context) =>
 TextStyle? titleBlack(BuildContext context) =>
     Theme.of(context).textTheme.headlineMedium;
 
+TextStyle? appbarTitleBlack(BuildContext context) =>
+    Theme.of(context).appBarTheme.titleTextStyle;
+
 Color primaryColor(BuildContext context) => Theme.of(context).primaryColor;
 
 Color dividerColor(BuildContext context) => Theme.of(context).dividerColor;

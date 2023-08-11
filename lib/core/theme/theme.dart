@@ -60,35 +60,23 @@ class AppTheme with ChangeNotifier {
     ),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: Colors.white,
-      filled: true,
+      filled: false,
       isDense: true,
       hintStyle: TextStyle(
         color: const Color(0xff474747).withOpacity(0.5),
         fontWeight: FontWeight.w400,
         fontSize: 16,
-        fontFamily: _baloFontFamily,
+        fontFamily: _latoFontFamily,
       ),
       labelStyle: const TextStyle(
         color: Color(0xff474747),
         fontWeight: FontWeight.w400,
-        fontSize: 16,
-        fontFamily: _baloFontFamily,
+        fontSize: 12,
+        fontFamily: _latoFontFamily,
       ),
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xffD9D9D9),
-          )),
-      enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xffD9D9D9),
-          )),
-      focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color(0xffD9D9D9),
-          )),
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
     ),
     dialogBackgroundColor: Colors.white,
     dialogTheme: const DialogTheme(
@@ -137,7 +125,7 @@ class AppTheme with ChangeNotifier {
         color: Color(0xff474747),
         fontWeight: FontWeight.w400,
         fontSize: 14,
-        fontFamily: _baloFontFamily,
+        fontFamily: _latoFontFamily,
       ),
       headlineLarge: const TextStyle(
         color: Colors.white,

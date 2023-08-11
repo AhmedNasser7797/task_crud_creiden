@@ -84,3 +84,7 @@ void showErrorDialog(String title, BuildContext context,
         ],
       ),
     );
+OutlineInputBorder buildOutlineInputBorder() {
+  return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none);
+}

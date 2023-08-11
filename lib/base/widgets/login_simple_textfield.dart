@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:task_crud/core/help_functions.dart';
 
 import '/core/theme/theme_data.dart';
 
@@ -108,15 +109,9 @@ class LoginSimpleTextField extends StatelessWidget {
               initialValue: initialValue,
               textAlign: textAlign ?? TextAlign.start,
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none),
+                border: buildOutlineInputBorder(),
+                enabledBorder: buildOutlineInputBorder(),
+                focusedBorder: buildOutlineInputBorder(),
                 fillColor: const Color(0xffF5F5F5),
                 filled: true,
                 contentPadding: contentPadding,
