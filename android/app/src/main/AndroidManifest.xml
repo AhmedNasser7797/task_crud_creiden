@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.task_crud">
-   <application
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
         android:label="task_crud"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
