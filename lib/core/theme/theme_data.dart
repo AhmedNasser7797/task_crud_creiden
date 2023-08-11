@@ -18,6 +18,9 @@ TextStyle? textFieldLoginTitle(BuildContext context) =>
 TextStyle? buttonStyle(BuildContext context) =>
     Theme.of(context).textTheme.headlineLarge;
 
+TextStyle? titleBlack(BuildContext context) =>
+    Theme.of(context).textTheme.headlineMedium;
+
 Color primaryColor(BuildContext context) => Theme.of(context).primaryColor;
 
 Color dividerColor(BuildContext context) => Theme.of(context).dividerColor;
