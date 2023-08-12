@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
 
   final double? iconWidth;
   final double? iconHeight;
+  final bool isGradiant;
 
   const CustomButton(
       {Key? key,
@@ -28,6 +29,7 @@ class CustomButton extends StatelessWidget {
       this.iconHeight = 8,
       this.iconWidth = 5,
       this.titleColor,
+      this.isGradiant = true,
       this.fontWeight})
       : super(key: key);
 
@@ -40,14 +42,8 @@ class CustomButton extends StatelessWidget {
         width: width ?? double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xff030091),
-              Color(0xff254DDE),
-              Color(0x66254DDE),
-              Color(0xff00FFFF),
-            ],
-          ),
+          color: color,
+          gradient: isGradiant ? buildGradientButton() : null,
           borderRadius: BorderRadius.circular(radius),
         ),
         child: Text(title,
@@ -59,4 +55,15 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
+}
+
+LinearGradient buildGradientButton() {
+  return const LinearGradient(
+    colors: [
+      Color(0xff030091),
+      Color(0xff254DDE),
+      Color(0x66254DDE),
+      Color(0xff00FFFF),
+    ],
+  );
 }

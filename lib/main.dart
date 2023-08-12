@@ -7,6 +7,7 @@ import 'core/constants/vars.dart';
 import 'core/hive_helper.dart';
 import 'core/theme/theme.dart';
 import 'features/auth/presentation/manager/auth_provider.dart';
+import 'features/to_do_list/presentation/manager/todo_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ class TaskCRUD extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+        ChangeNotifierProvider<TodoProvider>(create: (_) => TodoProvider()),
       ],
       child: MaterialApp(
         title: 'Task CRUD',

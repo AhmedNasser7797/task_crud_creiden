@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:task_crud/base/widgets/custom_button.dart';
+import 'package:task_crud/base/widgets/loading_widget.dart';
 import 'package:task_crud/base/widgets/simple_textfield.dart';
 import 'package:task_crud/core/extension_methods/size_extension.dart';
 import 'package:task_crud/core/theme/theme_data.dart';
+import 'package:task_crud/features/to_do_list/data/models/todo_model.dart';
+import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
@@ -18,24 +23,133 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Color? selectColor; // A purple color
   TextEditingController date = TextEditingController();
   TextEditingController time = TextEditingController();
-  String dateValue = "";
-  String name = "";
-  String description = "";
-  String timeValue = "";
+  TextEditingController name = TextEditingController();
+  TextEditingController description = TextEditingController();
+  // DateTime dateValue = DateTime.now();
+  // String name = "";
+  // String description = "";
+  // TimeOfDay timeValue = TimeOfDay.now();
+  TodoModel todo = TodoModel();
 
   @override
   void dispose() {
     date.dispose();
     time.dispose();
+    name.dispose();
+    description.dispose();
     super.dispose();
   }
 
-  Future<void> login() async {
-    if (!_formKey.currentState!.validate()) {
-      if (!autoValidate) setState(() => autoValidate = true);
-      return;
+  Future<void> addTodoItem() async {
+    try {
+      if (!_formKey.currentState!.validate()) {
+        if (!autoValidate) setState(() => autoValidate = true);
+        return;
+      }
+      _formKey.currentState?.save();
+      LoadingScreen.show(context);
+
+      print("name ${todo.name} ${name.text}");
+      print("description ${todo.description} ${description.text}");
+      await context.read<TodoProvider>().saveTodo(todo);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      showToast("item Added successfully!");
+    } catch (e, s) {
+      Navigator.pop(context);
+
+      error(e, s);
     }
-    _formKey.currentState?.save();
+  }
+
+  Future<void> deleteItem() async {
+    try {
+      LoadingScreen.show(context);
+
+      await context.read<TodoProvider>().deleteTodo();
+      Navigator.pop(context);
+      Navigator.pop(context);
+      showToast("item deleted successfully!");
+    } catch (e, s) {
+      Navigator.pop(context);
+
+      error(e, s);
+    }
+  }
+
+  Future<void> updateTodo() async {
+    try {
+      LoadingScreen.show(context);
+      final provider = context.read<TodoProvider>();
+      setNewData();
+      provider.selectTodo = todo;
+      await provider.updateTodo();
+      Navigator.pop(context);
+      Navigator.pop(context);
+      showToast("item updated successfully!");
+    } catch (e, s) {
+      Navigator.pop(context);
+
+      error(e, s);
+    }
+  }
+
+  void setNewData() {
+    todo.name = name.text;
+    todo.description = description.text;
+  }
+
+  Future<void> selectDate() async {
+    DateTime? value = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1),
+    );
+    if (value != null) {
+      date.text = getDateFormated(value);
+      todo.date = value;
+      setState(() {});
+    }
+  }
+
+  String getDateFormated(DateTime value) {
+    return "${DateFormat.d().format(value)} - ${DateFormat.MMMM().format(value)} - ${DateFormat.y().format(value)}";
+  }
+
+  Future<void> selectTime() async {
+    TimeOfDay? value = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (value != null) {
+      time.text = value.format(context);
+      todo.time = value;
+      print(value.hour);
+      print(value.minute);
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setValueIfUpdated();
+    });
+    super.initState();
+  }
+
+  void setValueIfUpdated() {
+    final todoProvider = context.read<TodoProvider>();
+    if (todoProvider.selectedTodo != null) {
+      todo = todoProvider.selectedTodo!;
+      time.text = todo.time?.format(context) ?? "";
+      name.text = todo.name;
+      description.text = todo.description;
+      if (todo.date != null) {
+        date.text = getDateFormated(todo.date!);
+      }
+    }
   }
 
   @override
@@ -73,10 +187,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   12.ph,
-                  Text(
-                    "Update Task",
-                    style: appbarTitleBlack(context),
-                  ),
+                  Selector<TodoProvider, bool>(
+                      selector: (p0, p1) => p1.selectedTodo != null,
+                      builder: (context, isUpdate, child) {
+                        return Text(
+                          isUpdate ? "Update Task" : "Add Task",
+                          style: appbarTitleBlack(context),
+                        );
+                      }),
                   32.ph,
                   buildElementWidget(
                     title: "Color", child: SizedBox(),
@@ -115,9 +233,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     child: Column(
                       children: [
                         SimpleTextField(
-                          onSaved: (newValue) {},
+                          controller: name,
+                          onSaved: (newValue) {
+                            print("newValue $newValue");
+                            todo.name = newValue!;
+                          },
                           hintText: "Todo Name",
                           withGradiant: true,
+                          validationError: Validator(rules: [
+                            requireRule(),
+                          ]),
                         ),
                       ],
                     ),
@@ -126,7 +251,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   buildElementWidget(
                     title: "Description",
                     child: SimpleTextField(
-                      onSaved: (newValue) {},
+                      controller: description,
+                      validationError: Validator(rules: [
+                        requireRule(),
+                      ]),
+                      onSaved: (newValue) => todo.description = newValue!,
                       hintText: "write description",
                       filled: true,
                       filledColor: Colors.white,
@@ -151,13 +280,93 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     child: Column(
                       children: [
                         SimpleTextField(
+                          validationError: Validator(rules: [
+                            requireRule(),
+                          ]),
+                          onTap: selectDate,
                           readOnly: true,
                           onSaved: (newValue) {},
-                          hintText: "Date",
+                          controller: date,
+                          hintText: "pick a reminder date",
+                          suffixIcon: const Icon(Icons.arrow_drop_down),
+                          border: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x33181743),
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x33181743),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
+                  22.ph,
+                  buildElementWidget(
+                    title: "Time",
+                    child: Column(
+                      children: [
+                        SimpleTextField(
+                          validationError: Validator(rules: [
+                            requireRule(),
+                          ]),
+                          onTap: selectTime,
+                          readOnly: true,
+                          onSaved: (newValue) {},
+                          controller: time,
+                          hintText: "pick a reminder Time",
+                          suffixIcon: const Icon(Icons.arrow_drop_down),
+                          border: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x33181743),
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x33181743),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  22.ph,
+                  Selector<TodoProvider, bool>(
+                      selector: (p0, p1) => p1.selectedTodo != null,
+                      builder: (context, isUpdate, child) {
+                        if (isUpdate) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomButton(
+                                width: getSize(context).width * 0.3,
+                                onTap: deleteItem,
+                                title: 'Delete',
+                                isGradiant: false,
+                                color: const Color(0xffE30000),
+                              ),
+                              CustomButton(
+                                width: getSize(context).width * 0.3,
+                                onTap: updateTodo,
+                                title: 'Update',
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomButton(
+                                width: getSize(context).width * 0.3,
+                                onTap: addTodoItem,
+                                title: 'Add',
+                              ),
+                            ],
+                          );
+                        }
+                      }),
                 ],
               ),
             ),

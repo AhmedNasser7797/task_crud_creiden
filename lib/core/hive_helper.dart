@@ -9,11 +9,14 @@ class HiveHelper {
   factory HiveHelper() => instance;
   late Box authBox;
   late Box themeBox;
+  late Box todoListBox;
   final DatabaseVariables _variables = DatabaseVariables.instance;
+
   Future<void> init() async {
     await Hive.initFlutter();
     authBox = await Hive.openBox(_variables.authBox);
     themeBox = await Hive.openBox(_variables.themeBox);
+    todoListBox = await Hive.openBox(_variables.todoListBox);
   }
 
   remove(String key) async {

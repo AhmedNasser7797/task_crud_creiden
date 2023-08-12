@@ -91,61 +91,66 @@ class SimpleTextField extends StatelessWidget {
           const SizedBox(
             height: 16,
           ),
-        SizedBox(
-            width: width ?? double.infinity,
-            child: TextFormField(
-              cursorColor: primaryColor(context),
-              onTap: onTap,
-              readOnly: readOnly,
-              textAlignVertical: TextAlignVertical.top,
-              obscureText: obSecure ?? false,
-              controller: controller,
-              enabled: onSaved != null,
-              onChanged: onChanged,
-              validator: validationError,
-              onSaved: onSaved,
-              inputFormatters: inputFormatters,
-              maxLines: maxLines,
-              keyboardType: textInputType,
-              maxLength: maxLength,
-              style: titleStyle(context)?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              initialValue: initialValue,
-              textAlign: textAlign ?? TextAlign.start,
-              decoration: InputDecoration(
-                contentPadding: contentPadding,
-                suffixIconConstraints: BoxConstraints(
-                  maxWidth: suffixIconMaxWidth,
-                  maxHeight: suffixIconMaxHeight,
-                  minWidth: 12,
-                ),
-                focusedBorder: focusedBorder,
-                enabledBorder: focusedBorder,
-                border: border,
-                prefixIcon: prefix,
-                suffixIcon: suffixIcon,
-                suffix: suffix,
-                prefixIconConstraints: const BoxConstraints(maxWidth: 66),
-                hintText: hintText,
-                filled: filled,
-                fillColor: filledColor,
-                isDense: true,
-                counter: const SizedBox(),
-                // contentPadding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              ),
-            )),
-        if (withGradiant)
-          Container(
-            height: 2,
-            width: width ?? double.infinity,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [
-              Color(0xff254DDE),
-              Color(0xffFE1E9A),
-            ])),
-          )
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            SizedBox(
+                width: width ?? double.infinity,
+                child: TextFormField(
+                  cursorColor: primaryColor(context),
+                  onTap: onTap,
+                  readOnly: readOnly,
+                  textAlignVertical: TextAlignVertical.top,
+                  obscureText: obSecure ?? false,
+                  controller: controller,
+                  enabled: onSaved != null,
+                  onChanged: onChanged,
+                  validator: validationError,
+                  onSaved: onSaved,
+                  inputFormatters: inputFormatters,
+                  maxLines: maxLines,
+                  keyboardType: textInputType,
+                  maxLength: maxLength,
+                  style: titleStyle(context)?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                  initialValue: initialValue,
+                  textAlign: textAlign ?? TextAlign.start,
+                  decoration: InputDecoration(
+                    contentPadding: contentPadding,
+                    suffixIconConstraints: BoxConstraints(
+                      maxWidth: suffixIconMaxWidth,
+                      maxHeight: suffixIconMaxHeight,
+                      minWidth: 12,
+                    ),
+                    focusedBorder: focusedBorder,
+                    enabledBorder: focusedBorder,
+                    border: border,
+                    prefixIcon: prefix,
+                    suffixIcon: suffixIcon,
+                    suffix: suffix,
+                    prefixIconConstraints: const BoxConstraints(maxWidth: 66),
+                    hintText: hintText,
+                    filled: filled,
+                    fillColor: filledColor,
+                    isDense: true,
+                    counter: const SizedBox(),
+                    // contentPadding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  ),
+                )),
+            if (withGradiant)
+              Container(
+                height: 2,
+                width: width ?? double.infinity,
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Color(0xff254DDE),
+                  Color(0xffFE1E9A),
+                ])),
+              )
+          ],
+        ),
       ],
     );
   }
