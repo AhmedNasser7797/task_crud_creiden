@@ -194,7 +194,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                       }),
                   32.ph,
                   buildElementWidget(
-                    title: "Color",
+                    title: "",
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -208,6 +208,16 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                                 ColorPickerType.accent: false,
                                 ColorPickerType.wheel: false,
                               },
+                              title: Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text("Color",
+                                    style: textFieldTitle(context)),
+                              ),
+                              padding: EdgeInsets.zero,
+                              colorCodeHasColor: false,
+                              enableOpacity: false,
+                              enableShadesSelection: false,
+                              includeIndex850: false,
                               onColorChanged: (Color value) {
                                 setState(() {
                                   selectColor = value;
@@ -216,12 +226,6 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                             ),
                           ),
                         ),
-                        if (autoValidate && selectColor == null)
-                          Text(
-                            "please choose color",
-                            style: titleStyle(context)
-                                ?.copyWith(color: Colors.red),
-                          )
                       ],
                     ),
                   ),
@@ -233,7 +237,6 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                         SimpleTextField(
                           controller: name,
                           onSaved: (newValue) {
-                            print("newValue $newValue");
                             todo.name = newValue!;
                           },
                           hintText: "Todo Name",
@@ -378,11 +381,12 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: textFieldTitle(context),
-        ),
-        10.ph,
+        if (title.isNotEmpty)
+          Text(
+            title,
+            style: textFieldTitle(context),
+          ),
+        if (title.isNotEmpty) 10.ph,
         child,
       ],
     );
