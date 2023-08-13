@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class TodoModel {
   int id = 0;
-  String name;
-  String description;
+  String name = "";
+  String description = "";
   DateTime? date;
   TimeOfDay? time;
-  String color;
+  String color = "";
   TodoModel({
     this.id = 0,
     this.name = "",
@@ -17,7 +17,9 @@ class TodoModel {
     this.color = "",
     this.time,
   });
+
   factory TodoModel.fromJson(Map<dynamic, dynamic> json) => TodoModel(
+        id: json["id"] ?? 0,
         name: json["name"] ?? "",
         description: json["description"] ?? "",
         date: DateTime.tryParse(json["date"]),
@@ -25,7 +27,7 @@ class TodoModel {
         time: _getTimeOfDay(json["time"]),
       );
   Map<String, dynamic> toJson() => {
-        // "id": id,
+        "id": id,
         "name": name,
         "description": description,
         "color": color,

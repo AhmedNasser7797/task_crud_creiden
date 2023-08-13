@@ -11,11 +11,15 @@ class BaseTodoRepository {
     await _localeTodoService.saveTodo(todo);
   }
 
-  Future<void> deleteTodo(int index) async {
-    await _localeTodoService.deleteTodo(index);
+  Future<void> deleteTodo(int key) async {
+    await _localeTodoService.deleteTodo(key);
   }
 
-  Future<void> updateTodo(int index, TodoModel todo) async {
-    await _localeTodoService.updateTodo(index, todo);
+  Future<void> updateTodo(TodoModel todo) async {
+    await _localeTodoService.updateTodo(todo);
+  }
+
+  Future<void> clearAll() async {
+    await _localeTodoService.clearAll();
   }
 }

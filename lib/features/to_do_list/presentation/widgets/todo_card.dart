@@ -16,7 +16,7 @@ class TODOCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("todo ${todo.color.toColor()}");
+    print("todo ${todo.id}");
     return InkWell(
       onTap: () {
         context.read<TodoProvider>().selectTodo = todo;

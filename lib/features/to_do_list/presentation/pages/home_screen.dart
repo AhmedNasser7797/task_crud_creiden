@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_crud/base/widgets/custom_button.dart';
+import 'package:task_crud/base/widgets/loading_widget.dart';
 import 'package:task_crud/base/widgets/login_simple_textfield.dart';
 import 'package:task_crud/core/constants/vars.dart';
 import 'package:task_crud/core/extension_methods/size_extension.dart';
-import 'package:task_crud/core/hive_helper.dart';
-import 'package:task_crud/features/to_do_list/data/models/todo_model.dart';
 import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider.dart';
 import 'package:task_crud/features/to_do_list/presentation/pages/todo_details_sccreen.dart';
 import 'package:task_crud/features/to_do_list/presentation/widgets/todo_card.dart';
@@ -21,7 +19,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getData();
+    });
+    super.initState();
+  }
+
+  void getData() {
+    try {
+      LoadingScreen.show(context);
+      context.read<TodoProvider>().getTodos();
+      Navigator.pop(context);
+    } catch (e, s) {
+      error(e, s);
+      showToast(e.toString());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(DateTime.now().toIso8601String());
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -42,6 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: const Text("TODO"),
           backgroundColor: Colors.transparent,
+          leading: IconButton(
+              onPressed: () => context.read<TodoProvider>().clearAll(),
+              icon: Icon(
+                Icons.clear,
+                color: Colors.blueAccent,
+              )),
           actions: [
             IconButton(
               onPressed: addNewTask,
@@ -52,35 +76,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         endDrawer: const TodoDetailsScreen(),
-        body: ValueListenableBuilder(
-            valueListenable: HiveHelper.instance.todoListBox.listenable(),
-            builder: (context, Box box, widget) {
-              if (box.isEmpty) {
-                return const EmptyTodoList();
-              } else {
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: box.length,
-                  separatorBuilder: (context, index) => 20.ph,
-                  itemBuilder: (context, index) {
-                    Map<dynamic, dynamic> todoData =
-                        HiveHelper.instance.todoListBox.getAt(index);
-                    if (todoData.isEmpty) {
-                      return const SizedBox();
-                    } else {
-                      try {
-                        TodoModel todo = TodoModel.fromJson(todoData);
-                        todo.id = index;
-                        return TODOCard(todo: todo);
-                      } catch (e, s) {
-                        error(e, s);
-                        return const SizedBox();
-                      }
-                    }
-                  },
-                );
-              }
-            }),
+        body: Consumer<TodoProvider>(builder: (context, value, child) {
+          if (value.items.isEmpty) {
+            return const EmptyTodoList();
+          } else {
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: value.items.length,
+              separatorBuilder: (context, index) => 20.ph,
+              itemBuilder: (context, index) =>
+                  TODOCard(todo: value.items[index]),
+            );
+          }
+        }),
         floatingActionButton: FloatingActionButton(
           onPressed: addNewTask,
           child: Container(

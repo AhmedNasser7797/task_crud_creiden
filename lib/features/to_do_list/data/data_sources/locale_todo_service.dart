@@ -12,14 +12,18 @@ class LocaleTodoService {
   late Box todoListBox;
 
   Future<void> saveTodo(TodoModel todo) async {
-    await _hiveHelper.todoListBox.add(todo.toJson());
+    await _hiveHelper.todoListBox.put(todo.id, todo.toJson());
   }
 
-  Future<void> deleteTodo(int index) async {
-    await _hiveHelper.todoListBox.deleteAt(index);
+  Future<void> deleteTodo(int key) async {
+    await _hiveHelper.todoListBox.delete(key);
   }
 
-  Future<void> updateTodo(int index, TodoModel todo) async {
-    await _hiveHelper.todoListBox.putAt(index, todo.toJson());
+  Future<void> updateTodo(TodoModel todo) async {
+    await _hiveHelper.todoListBox.put(todo.id, todo.toJson());
+  }
+
+  Future<void> clearAll() async {
+    await _hiveHelper.todoListBox.clear();
   }
 }

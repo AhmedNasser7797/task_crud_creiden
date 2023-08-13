@@ -50,6 +50,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
       if (selectColor == null) return showToast("choose color first!");
       LoadingScreen.show(context);
       setNewData();
+      // setTodoId();
       await context.read<TodoProvider>().saveTodo(todo);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -91,6 +92,10 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
       error(e, s);
     }
   }
+
+  // void setTodoId() {
+  //   todo.id = DateTime.now().millisecondsSinceEpoch;
+  // }
 
   void setNewData() {
     todo.name = name.text;
