@@ -8,7 +8,7 @@ class UtilsConstants {
   static final UtilsConstants _instance = UtilsConstants._();
 
   factory UtilsConstants() => _instance;
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  // GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   String dateFormat = 'dd-MM-yyyy';
 }

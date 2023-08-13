@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:task_crud/core/hive_helper.dart';
 import 'package:task_crud/core/notification_controller.dart';
@@ -9,10 +10,34 @@ export 'package:provider/provider.dart';
 class TodoProvider with ChangeNotifier {
   final BaseTodoRepository _baseTodoRepository = BaseTodoRepository.instance;
   List<TodoModel> items = [];
+  List<TodoModel> get searchedItems => items.where((element) {
+        return element.color == searchedColor?.hex ||
+            (searchedDate != null &&
+                DateTime(element.date!.year, element.date!.month,
+                            element.date!.day)
+                        .compareTo(DateTime(searchedDate!.year,
+                            searchedDate!.month, searchedDate!.day)) ==
+                    0);
+      }).toList();
   TodoModel? selectedTodo;
+
+  Color? searchedColor;
+  DateTime? searchedDate;
 
   set selectTodo(TodoModel? value) {
     selectedTodo = value;
+
+    notifyListeners();
+  }
+
+  set setSearchedColor(Color? color) {
+    searchedColor = color;
+
+    notifyListeners();
+  }
+
+  set setSearchedDate(DateTime? date) {
+    searchedDate = date;
 
     notifyListeners();
   }
@@ -40,11 +65,11 @@ class TodoProvider with ChangeNotifier {
   }
 
   Future<void> deleteTodo() async {
-    await _baseTodoRepository.deleteTodo(selectedTodo?.id ?? 0);
+    await _baseTodoRepository.deleteTodo(selectedTodo!.id);
     items.remove(selectedTodo);
     notifyListeners();
     await NotificationController()
-        .disableScheduledNotification(selectedTodo?.id ?? 0);
+        .disableScheduledNotification(selectedTodo!.id);
 
     selectedTodo = null;
   }
@@ -57,7 +82,7 @@ class TodoProvider with ChangeNotifier {
         selectedTodo!;
 
     await NotificationController()
-        .disableScheduledNotification(selectedTodo?.id ?? 0);
+        .disableScheduledNotification(selectedTodo!.id);
     await NotificationController().createScheduleNotification(selectedTodo!);
   }
 

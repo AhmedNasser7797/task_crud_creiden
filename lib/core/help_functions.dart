@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:task_crud/core/theme/theme.dart';
 
 import '/base/widgets/simple_textfield.dart';
@@ -87,4 +88,8 @@ void showErrorDialog(String title, BuildContext context,
 OutlineInputBorder buildOutlineInputBorder() {
   return OutlineInputBorder(
       borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none);
+}
+
+String getDateFormated(DateTime value) {
+  return "${DateFormat.d().format(value)} - ${DateFormat.MMMM().format(value)} - ${DateFormat.y().format(value)}";
 }

@@ -1,6 +1,5 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:task_crud/base/widgets/custom_button.dart';
 import 'package:task_crud/base/widgets/loading_widget.dart';
 import 'package:task_crud/base/widgets/simple_textfield.dart';
@@ -93,10 +92,6 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     }
   }
 
-  // void setTodoId() {
-  //   todo.id = DateTime.now().millisecondsSinceEpoch;
-  // }
-
   void setNewData() {
     todo.name = name.text;
     todo.description = description.text;
@@ -115,10 +110,6 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
       todo.date = value;
       setState(() {});
     }
-  }
-
-  String getDateFormated(DateTime value) {
-    return "${DateFormat.d().format(value)} - ${DateFormat.MMMM().format(value)} - ${DateFormat.y().format(value)}";
   }
 
   Future<void> selectTime(Function setState) async {

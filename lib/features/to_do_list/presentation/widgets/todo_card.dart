@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:task_crud/core/constants/vars.dart';
 import 'package:task_crud/core/extension_methods/color_extension.dart';
 import 'package:task_crud/core/extension_methods/size_extension.dart';
 import 'package:task_crud/core/theme/theme_data.dart';
@@ -9,18 +8,21 @@ import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider
 
 class TODOCard extends StatelessWidget {
   final TodoModel todo;
+  final GlobalKey<ScaffoldState> scaffoldKey;
   const TODOCard({
     super.key,
     required this.todo,
+    required this.scaffoldKey,
   });
 
   @override
   Widget build(BuildContext context) {
-    print("todo ${todo.id}");
+    print("todocolor ${todo.color}");
+    print("todoDate ${todo.date}");
     return InkWell(
       onTap: () {
         context.read<TodoProvider>().selectTodo = todo;
-        UtilsConstants().scaffoldKey.currentState?.openEndDrawer();
+        scaffoldKey.currentState?.openEndDrawer();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),

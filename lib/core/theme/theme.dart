@@ -48,7 +48,8 @@ class AppTheme with ChangeNotifier {
     cardColor: Colors.white,
     fontFamily: _latoFontFamily,
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
+      iconTheme: IconThemeData(color: Colors.black),
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(

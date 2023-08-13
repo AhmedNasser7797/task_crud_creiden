@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:task_crud/base/widgets/custom_button.dart';
 import 'package:task_crud/base/widgets/loading_widget.dart';
 import 'package:task_crud/base/widgets/login_simple_textfield.dart';
-import 'package:task_crud/core/constants/vars.dart';
+import 'package:task_crud/base/widgets/simple_textfield.dart';
 import 'package:task_crud/core/extension_methods/size_extension.dart';
 import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider.dart';
 import 'package:task_crud/features/to_do_list/presentation/pages/todo_details_sccreen.dart';
+import 'package:task_crud/features/to_do_list/presentation/widgets/filter_dialog.dart';
 import 'package:task_crud/features/to_do_list/presentation/widgets/todo_card.dart';
 
 import '../widgets/empty_todo_list_widget.dart';
@@ -18,6 +19,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -37,34 +40,24 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void showFilterDialog() {
+    showDialog(context: context, builder: (context) => const FilterDialog());
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(DateTime.now().toIso8601String());
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Colors.white,
-            const Color(0x26FEA64C).withOpacity(0.9),
-            const Color(0x66FE1E9A).withOpacity(0.9),
-            const Color(0x66254DDE).withOpacity(0.9),
-          ],
-          stops: const [0.2, 0.5, 0.9, 1],
-        ),
-      ),
+    return GradiantScreen(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        key: UtilsConstants().scaffoldKey,
+        key: scaffoldKey,
         appBar: AppBar(
           title: const Text("TODO"),
           backgroundColor: Colors.transparent,
           leading: IconButton(
-              onPressed: () => context.read<TodoProvider>().clearAll(),
-              icon: Icon(
-                Icons.clear,
-                color: Colors.blueAccent,
+              onPressed: showFilterDialog,
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black,
               )),
           actions: [
             IconButton(
@@ -85,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: value.items.length,
               separatorBuilder: (context, index) => 20.ph,
               itemBuilder: (context, index) =>
-                  TODOCard(todo: value.items[index]),
+                  TODOCard(todo: value.items[index], scaffoldKey: scaffoldKey),
             );
           }
         }),
@@ -108,6 +101,31 @@ class _HomeScreenState extends State<HomeScreen> {
   void addNewTask() {
     ///delete selected item to add new one
     context.read<TodoProvider>().selectTodo = null;
-    UtilsConstants().scaffoldKey.currentState?.openEndDrawer();
+    scaffoldKey.currentState?.openEndDrawer();
+  }
+}
+
+class GradiantScreen extends StatelessWidget {
+  final Widget child;
+  const GradiantScreen({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.white,
+            const Color(0x26FEA64C).withOpacity(0.9),
+            const Color(0x66FE1E9A).withOpacity(0.9),
+            const Color(0x66254DDE).withOpacity(0.9),
+          ],
+          stops: const [0.2, 0.5, 0.9, 1],
+        ),
+      ),
+      child: child,
+    );
   }
 }
