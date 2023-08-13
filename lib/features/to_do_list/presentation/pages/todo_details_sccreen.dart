@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:task_crud/base/widgets/custom_button.dart';
@@ -8,27 +9,24 @@ import 'package:task_crud/core/theme/theme_data.dart';
 import 'package:task_crud/features/to_do_list/data/models/todo_model.dart';
 import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider.dart';
 
-class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({
+class TodoDetailsScreen extends StatefulWidget {
+  const TodoDetailsScreen({
     super.key,
   });
 
   @override
-  State<CustomDrawer> createState() => _CustomDrawerState();
+  State<TodoDetailsScreen> createState() => _TodoDetailsScreenState();
 }
 
-class _CustomDrawerState extends State<CustomDrawer> {
+class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool autoValidate = false;
-  Color? selectColor; // A purple color
+  Color? selectColor;
   TextEditingController date = TextEditingController();
   TextEditingController time = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
-  // DateTime dateValue = DateTime.now();
-  // String name = "";
-  // String description = "";
-  // TimeOfDay timeValue = TimeOfDay.now();
+
   TodoModel todo = TodoModel();
 
   @override
@@ -47,10 +45,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
         return;
       }
       _formKey.currentState?.save();
+      if (selectColor == null) return showToast("choose color first!");
       LoadingScreen.show(context);
-
-      print("name ${todo.name} ${name.text}");
-      print("description ${todo.description} ${description.text}");
+      setNewData();
       await context.read<TodoProvider>().saveTodo(todo);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -89,7 +86,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
       showToast("item updated successfully!");
     } catch (e, s) {
       Navigator.pop(context);
-
       error(e, s);
     }
   }
@@ -97,6 +93,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   void setNewData() {
     todo.name = name.text;
     todo.description = description.text;
+    todo.color = selectColor?.hex ?? "";
   }
 
   Future<void> selectDate() async {
@@ -125,8 +122,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     if (value != null) {
       time.text = value.format(context);
       todo.time = value;
-      print(value.hour);
-      print(value.minute);
       setState(() {});
     }
   }
@@ -146,9 +141,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
       time.text = todo.time?.format(context) ?? "";
       name.text = todo.name;
       description.text = todo.description;
+      selectColor = todo.color.toColor;
       if (todo.date != null) {
         date.text = getDateFormated(todo.date!);
       }
+      setState(() {});
     }
   }
 
@@ -197,35 +194,36 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       }),
                   32.ph,
                   buildElementWidget(
-                    title: "Color", child: SizedBox(),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(6),
-                    //     child: Card(
-                    //       elevation: 2,
-                    //       child: ColorPicker(
-                    //         // pickersEnabled: const <ColorPickerType, bool>{
-                    //         //   ColorPickerType.accent: false,
-                    //         //   ColorPickerType.wheel: false,
-                    //         // },
-                    //         // recentColors: [
-                    //         //   Colors.red,
-                    //         //   Colors.black,
-                    //         //   Colors.blueAccent,
-                    //         //   Colors.greenAccent,
-                    //         // ],
-                    //         onColorChanged: (Color value) {
-                    //           print(value);
-                    //
-                    //           setState(() {
-                    //             selectColor = value;
-                    //           });
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    title: "Color",
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: ColorPicker(
+                              color: selectColor ?? primaryColor(context),
+                              pickersEnabled: const <ColorPickerType, bool>{
+                                ColorPickerType.accent: false,
+                                ColorPickerType.wheel: false,
+                              },
+                              onColorChanged: (Color value) {
+                                setState(() {
+                                  selectColor = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        if (autoValidate && selectColor == null)
+                          Text(
+                            "please choose color",
+                            style: titleStyle(context)
+                                ?.copyWith(color: Colors.red),
+                          )
+                      ],
+                    ),
                   ),
                   22.ph,
                   buildElementWidget(
