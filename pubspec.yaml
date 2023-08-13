@@ -36,6 +36,8 @@ dependencies:
   provider: ^6.0.5
   gradient_borders: ^1.0.0
   flex_color_picker: ^3.3.0
+  awesome_notifications: ^0.7.4+1
+
 
 
 dev_dependencies:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:task_crud/base/splash_screen.dart';
+import 'package:task_crud/core/notification_controller.dart';
 
 import 'core/constants/vars.dart';
 import 'core/hive_helper.dart';
@@ -13,6 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await HiveHelper.instance.init();
+  await NotificationController().initNotification();
   runApp(const TaskCRUD());
 }
 
