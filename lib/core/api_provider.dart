@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:task_crud/features/auth/data/data_sources/auth_api_data_source.dart';
 
 import 'constants/database_variable.dart';
 import 'constants/server_constants.dart';
@@ -13,7 +14,21 @@ class ApiProvider {
 // next three lines makes this class a Singleton
   static final ApiProvider _instance = ApiProvider.internal();
 
-  ApiProvider.internal();
+  ApiProvider.internal() {
+    dio.interceptors.add(InterceptorsWrapper(onError: (error, _) async {
+      if (error.response?.statusCode == 403 ||
+          error.response?.statusCode == 401) {
+        await refreshToken();
+      }
+    }));
+  }
+  Future<void> refreshToken() async {
+    final response = await post(ServerConstants().refreshToken);
+
+    if (response.statusCode == 200) {
+      await saveToken(response.data['data'][_databaseVariables.token]);
+    }
+  }
 
   factory ApiProvider() => _instance;
   final HiveHelper _hiveHelper = HiveHelper.instance;

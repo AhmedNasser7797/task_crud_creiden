@@ -36,11 +36,7 @@ class ApiAuthService {
       data: jsonEncode(data),
     );
     if (_dio.validResponse(response.statusCode)) {
-      await _hiveHelper.saveStringAboutAuth(
-        _databaseVariables.token,
-        "Bearer ${response.data['data'][_databaseVariables.token]}",
-      );
-
+      await saveToken(response.data['data'][_databaseVariables.token]);
       return UserModel.fromJson(response.data['data']['user']);
     } else {
       // Err
@@ -49,4 +45,13 @@ class ApiAuthService {
   }
 
 ////////////////////////////////// UTILS ///////////////////////////////////////
+}
+
+Future<void> saveToken(String? token) async {
+  final HiveHelper hiveHelper = HiveHelper.instance;
+  final DatabaseVariables databaseVariables = DatabaseVariables.instance;
+  await hiveHelper.saveStringAboutAuth(
+    databaseVariables.token,
+    "Bearer $token",
+  );
 }

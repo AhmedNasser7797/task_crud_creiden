@@ -11,4 +11,5 @@ class ServerConstants {
 
   /// Auth
   String loginEndPoint = "auth/login";
+  String refreshToken = "auth/refresh-token";
 }
