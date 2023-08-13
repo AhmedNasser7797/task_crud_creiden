@@ -8,6 +8,7 @@ import 'package:task_crud/core/extension_methods/size_extension.dart';
 import 'package:task_crud/core/theme/theme_data.dart';
 import 'package:task_crud/features/to_do_list/data/models/todo_model.dart';
 import 'package:task_crud/features/to_do_list/presentation/manager/todo_provider.dart';
+import 'package:task_crud/features/to_do_list/presentation/widgets/pick_color_widget.dart';
 
 class TodoDetailsScreen extends StatefulWidget {
   const TodoDetailsScreen({
@@ -96,7 +97,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     todo.color = selectColor?.hex ?? "";
   }
 
-  Future<void> selectDate() async {
+  Future<void> selectDate(Function setState) async {
     DateTime? value = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -106,7 +107,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     if (value != null) {
       date.text = getDateFormated(value);
       todo.date = value;
-      setState(() {});
+      setState();
     }
   }
 
@@ -114,7 +115,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     return "${DateFormat.d().format(value)} - ${DateFormat.MMMM().format(value)} - ${DateFormat.y().format(value)}";
   }
 
-  Future<void> selectTime() async {
+  Future<void> selectTime(Function setState) async {
     TimeOfDay? value = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -122,7 +123,7 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
     if (value != null) {
       time.text = value.format(context);
       todo.time = value;
-      setState(() {});
+      setState();
     }
   }
 
@@ -195,39 +196,15 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                   32.ph,
                   buildElementWidget(
                     title: "",
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: ColorPicker(
-                              color: selectColor ?? primaryColor(context),
-                              pickersEnabled: const <ColorPickerType, bool>{
-                                ColorPickerType.accent: false,
-                                ColorPickerType.wheel: false,
-                              },
-                              title: Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Text("Color",
-                                    style: textFieldTitle(context)),
-                              ),
-                              padding: EdgeInsets.zero,
-                              colorCodeHasColor: false,
-                              enableOpacity: false,
-                              enableShadesSelection: false,
-                              includeIndex850: false,
-                              onColorChanged: (Color value) {
-                                setState(() {
-                                  selectColor = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: StatefulBuilder(builder: (context, setState) {
+                      return PickColorWidgetForTodo(
+                          color: selectColor,
+                          onChanged: (value) {
+                            setState(() {
+                              selectColor = value;
+                            });
+                          });
+                    }),
                   ),
                   22.ph,
                   buildElementWidget(
@@ -278,60 +255,56 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
                   22.ph,
                   buildElementWidget(
                     title: "Date",
-                    child: Column(
-                      children: [
-                        SimpleTextField(
-                          validationError: Validator(rules: [
-                            requireRule(),
-                          ]),
-                          onTap: selectDate,
-                          readOnly: true,
-                          onSaved: (newValue) {},
-                          controller: date,
-                          hintText: "pick a reminder date",
-                          suffixIcon: const Icon(Icons.arrow_drop_down),
-                          border: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x33181743),
-                            ),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x33181743),
-                            ),
+                    child: StatefulBuilder(builder: (context, setState) {
+                      return SimpleTextField(
+                        validationError: Validator(rules: [
+                          requireRule(),
+                        ]),
+                        onTap: () => selectDate(setState),
+                        readOnly: true,
+                        onSaved: (newValue) {},
+                        controller: date,
+                        hintText: "pick a reminder date",
+                        suffixIcon: const Icon(Icons.arrow_drop_down),
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x33181743),
                           ),
                         ),
-                      ],
-                    ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x33181743),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   22.ph,
                   buildElementWidget(
                     title: "Time",
-                    child: Column(
-                      children: [
-                        SimpleTextField(
-                          validationError: Validator(rules: [
-                            requireRule(),
-                          ]),
-                          onTap: selectTime,
-                          readOnly: true,
-                          onSaved: (newValue) {},
-                          controller: time,
-                          hintText: "pick a reminder Time",
-                          suffixIcon: const Icon(Icons.arrow_drop_down),
-                          border: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x33181743),
-                            ),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x33181743),
-                            ),
+                    child: StatefulBuilder(builder: (context, setState) {
+                      return SimpleTextField(
+                        validationError: Validator(rules: [
+                          requireRule(),
+                        ]),
+                        onTap: () => selectTime(setState),
+                        readOnly: true,
+                        onSaved: (newValue) {},
+                        controller: time,
+                        hintText: "pick a reminder Time",
+                        suffixIcon: const Icon(Icons.arrow_drop_down),
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x33181743),
                           ),
                         ),
-                      ],
-                    ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x33181743),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                   22.ph,
                   Selector<TodoProvider, bool>(
