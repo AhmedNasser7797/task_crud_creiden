@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:task_crud/base/widgets/custom_button.dart';
 import 'package:task_crud/base/widgets/loading_widget.dart';
 import 'package:task_crud/base/widgets/simple_textfield.dart';
+import 'package:task_crud/core/extension_methods/date_from_time_of_day_extesion.dart';
 import 'package:task_crud/core/extension_methods/size_extension.dart';
 import 'package:task_crud/core/theme/theme_data.dart';
 import 'package:task_crud/features/to_do_list/data/models/todo_model.dart';
@@ -100,14 +101,14 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
   Future<void> selectDate(Function setState) async {
     DateTime? value = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: todo.date ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 1),
     );
     if (value != null) {
       date.text = getDateFormated(value);
       todo.date = value;
-      setState();
+      setState(() {});
     }
   }
 
@@ -116,14 +117,25 @@ class _TodoDetailsScreenState extends State<TodoDetailsScreen> {
   }
 
   Future<void> selectTime(Function setState) async {
+    if (todo.date == null) return showToast("please choose date first!");
     TimeOfDay? value = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (value != null) {
-      time.text = value.format(context);
-      todo.time = value;
-      setState();
+    checkAvailableTime(value);
+  }
+
+  void checkAvailableTime(TimeOfDay? value) async {
+    if (todo.date != null && value != null) {
+      bool isBefore = todo.date!.fromTimeOfDay(value).isBefore(DateTime.now());
+      if (isBefore) {
+        return showToast(
+            "the time you choosed is invalid!\nplease choose time after now");
+      } else {
+        time.text = value.format(context);
+        todo.time = value;
+        setState(() {});
+      }
     }
   }
 
